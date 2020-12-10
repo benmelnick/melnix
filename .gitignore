@@ -2,10 +2,15 @@
 *.d
 
 # Object files
+build/
 *.o
 *.ko
 *.obj
 *.elf
+*.iso
+
+# Bochs logs
+bochslog.txt
 
 # Linker output
 *.ilk
