@@ -1,5 +1,7 @@
     global loader                   ; the entry symbol for ELF
 
+    extern main                     ; entry symbol for C code
+
     MAGIC_NUMBER equ 0x1BADB002     ; define the magic number constant
     FLAGS        equ 0x0            ; multiboot flags
     CHECKSUM     equ -MAGIC_NUMBER  ; calculate the checksum
@@ -17,7 +19,9 @@
     
     setup_kstack:                   ; point esp to the start of the stack (end of memory area)
         mov esp, kernel_stack + KSTACK_SIZE
-        mov eax, 0xCAFEBABE
+        
+    call_main:
+        call main
     
     .loop:
         jmp .loop                   ; loop forever

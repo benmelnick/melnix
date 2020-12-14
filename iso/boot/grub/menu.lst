@@ -2,4 +2,4 @@ default=0
 timeout=0
 
 title Melnix
-kernel /boot/kernel.elf
+kernel /kernel.elf

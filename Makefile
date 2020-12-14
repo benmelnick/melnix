@@ -2,7 +2,7 @@ KERNEL=kernel.elf
 SRC=src/
 OBJDIR=build/
 ISO=iso/
-BUILD_DIRS=$(OBJDIR)boot
+BUILD_DIRS=$(OBJDIR)boot $(OBJDIR)kernel $(OBJDIR)drivers
 
 .PHONY: $(KERNEL)
 .PHONY: clean
@@ -10,11 +10,14 @@ BUILD_DIRS=$(OBJDIR)boot
 AS=nasm
 CC=gcc
 LD=ld
+INC_PATH=-I$(SRC)/include
 ASFLAGS=-f elf32
-CFLAGS=-m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector  -nostartfiles -nodefaultlibs -c -Wall -std=c11 -pedantic # -Werror
+CFLAGS=-m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector  -nostartfiles -nodefaultlibs -c -Wall -Wextra $(INC_PATH) -std=c11 -pedantic # -Werror
 LDFLAGS=-T $(SRC)/link.ld -melf_i386
 
-DOTFILES = boot/bootloader.o
+DOTFILES = boot/bootloader.o \
+		   drivers/framebuf.o \
+		   kernel/main.o
 
 OBJ = $(patsubst %,$(OBJDIR)%,$(DOTFILES))
 
@@ -46,7 +49,7 @@ iso: $(KERNEL)
 				-input-charset utf8             \
 				-quiet                          \
 				-boot-info-table                \
-				-o $(OBJDIR)tantra.iso          \
+				-o $(OBJDIR)melnix.iso          \
 				iso
 
 run: iso
@@ -55,4 +58,4 @@ run: iso
 
 clean:
 	@echo [INFO] Cleaning build directory and other artifacts
-	@rm -rf $(OBJDIR) iso/kernel.elf tantra.iso
+	@rm -rf $(OBJDIR) iso/kernel.elf melnix.iso
